@@ -1,0 +1,51 @@
+import "./Note.css";
+import { useState } from "react";
+import { useEffect } from "react";
+
+export default function App() {
+  const [notes, setNotes] = useState([]);
+
+  useEffect(() => {
+    const savedNotes = JSON.parse(localStorage.getItem("notes")) || [];
+    setNotes(savedNotes);
+  }, []);
+  
+
+
+useEffect(()=>{
+  localStorage.setItem("notes",JSON.stringify(notes))
+}, [notes])
+
+
+  function AddNote() {
+    setNotes((prevNotes) => [
+      ...prevNotes,
+      { id: crypto.randomUUID(), plah: "hi" },
+    ]);
+  }
+
+  function remove(indexToRemove) {
+    setNotes((prevNotes) =>
+      prevNotes.filter((_, index) => index !== indexToRemove)
+    );
+  }
+
+  return (
+    <>
+      <h1 className="title">Note taker</h1>
+      <div className="container">
+        {notes.map((note, index) => (
+          <div className="note-container" key={note.id}>
+            <textarea
+              placeholder={note.plah}
+              onDoubleClick={() => remove(index)}
+            ></textarea>
+          </div>
+        ))}
+        <button onClick={AddNote}>Add</button>
+      </div>
+    </>
+  );
+}
+
+
